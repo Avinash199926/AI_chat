@@ -1,4 +1,4 @@
-<!doctype html>
+<!-- <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -29,5 +29,85 @@
       <p class="muted">Use demo credentials above to try it.</p>
     </form>
   </div>
+</body>
+</html>
+ -->
+
+
+
+ <!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Auth • AI Chat</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <style>
+    .hidden { display: none; }
+    .toggle-link { cursor: pointer; color: #007bff; text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="auth-shell">
+    
+    <!-- Login Form -->
+    <form id="login-form" class="card" method="post" action="/login">
+      <h1 class="h">Welcome back</h1>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="flash">
+            {% for cat, msg in messages %}
+              <div class="flash-{{cat}}">{{msg}}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+      <label class="field">
+        <span>Email</span>
+        <input type="email" name="email" placeholder="demo@example.com" required value="demo@example.com" />
+      </label>
+      <label class="field">
+        <span>Password</span>
+        <input type="password" name="password" placeholder="•••••••" required value="demo123" />
+      </label>
+      <button class="primary" type="submit">Log in</button>
+      <p class="muted">
+        Don’t have an account? <span class="toggle-link" onclick="toggleForms()">Register here</span>
+      </p>
+    </form>
+
+    <!-- Register Form -->
+    <form id="register-form" class="card hidden" method="post" action="/register">
+      <h1 class="h">Create an account</h1>
+      <label class="field">
+        <span>Full Name</span>
+        <input type="text" name="name" placeholder="John Doe" required />
+      </label>
+      <label class="field">
+        <span>Email</span>
+        <input type="email" name="email" placeholder="you@example.com" required />
+      </label>
+      <label class="field">
+        <span>Password</span>
+        <input type="password" name="password" placeholder="•••••••" required />
+      </label>
+      <label class="field">
+        <span>Confirm Password</span>
+        <input type="password" name="confirm_password" placeholder="•••••••" required />
+      </label>
+      <button class="primary" type="submit">Register</button>
+      <p class="muted">
+        Already have an account? <span class="toggle-link" onclick="toggleForms()">Log in</span>
+      </p>
+    </form>
+
+  </div>
+
+  <script>
+    function toggleForms() {
+      document.getElementById('login-form').classList.toggle('hidden');
+      document.getElementById('register-form').classList.toggle('hidden');
+    }
+  </script>
 </body>
 </html>
