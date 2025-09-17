@@ -5,40 +5,82 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>AI Chat</title>
   <link rel="stylesheet" href="/static/style.css" />
+  <style>
+    .layout { display:flex; height:100vh; }
+    .sidebar {
+      width: 280px; max-width: 80vw; border-right: 1px solid var(--border);
+      display:flex; flex-direction:column; background: var(--panel);
+    }
+    .sidebar .top { padding: 12px; display:flex; gap:8px; align-items:center; border-bottom:1px solid var(--border); }
+    .sidebar .list { overflow:auto; padding: 8px; display:flex; flex-direction:column; gap:6px; }
+    .chat-item {
+      display:flex; align-items:center; gap:8px; padding:10px; border-radius:10px;
+      cursor:pointer; background: transparent; border:1px solid transparent;
+    }
+    .chat-item:hover { background: var(--hover); }
+    .chat-item.active { background: var(--bg); border-color: var(--border); }
+    .chat-title { flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .chat-meta { font-size: 12px; opacity: .7; }
+    .row { display:flex; gap:6px; align-items:center; }
+    .ghost.small { padding:6px 8px; font-size: 13px; }
+    .danger { color: #b01818; }
+    .main { flex:1; display:flex; flex-direction:column; }
+    .topbar { display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border-bottom:1px solid var(--border); background: var(--panel); }
+    .brand { font-weight: 700; }
+    .userbar { display:flex; gap:8px; align-items:center; }
+    .chip { padding: 4px 8px; border-radius: 999px; background: var(--bg); border:1px solid var(--border); font-size: 12px; }
+    .chat { flex:1; overflow:auto; padding: 16px; }
+    .composer { display:flex; gap:8px; border-top:1px solid var(--border); padding: 10px; }
+    .composer textarea { flex:1; resize:none; }
+    .full { margin: 8px 12px; }
+  </style>
 </head>
 <body>
-  <div class="app">
-    <header class="topbar">
-      <div class="brand">🤖 AI Chat</div>
-      <nav class="userbar">
-        <a class="chip" href="/subscribe">{{ plan|capitalize }} plan</a>
-        <span class="muted email">{{ user_email }}</span>
-        <a class="ghost" href="/logout">Logout</a>
-        <button id="themeToggle" class="ghost" title="Toggle theme">🌓</button>
-      </nav>
-    </header>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="top">
+        <button id="newChat" class="primary">＋ New Chat</button>
+        <button id="renameChat" class="ghost small">Rename</button>
+        <button id="deleteChat" class="ghost small danger">Delete</button>
+      </div>
+      <div id="chatList" class="list"></div>
+    </aside>
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        <div class="flash full">
-          {% for cat, msg in messages %}<div class="flash-{{cat}}">{{msg}}</div>{% endfor %}
+    <!-- Main -->
+    <div class="main">
+      <header class="topbar">
+        <div class="brand">🤖 AI Chat</div>
+        <nav class="userbar">
+          <a class="chip" href="/subscribe">{{ plan|capitalize }} plan</a>
+          <span class="muted email">{{ user_email }}</span>
+          <a class="ghost" href="/logout">Logout</a>
+          <button id="themeToggle" class="ghost" title="Toggle theme">🌓</button>
+        </nav>
+      </header>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="flash full">
+            {% for cat, msg in messages %}<div class="flash-{{cat}}">{{msg}}</div>{% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      {% if plan == 'free' %}
+        <div class="upgrade-banner">
+          <div>You're on the <strong>Free</strong> plan. Unlock longer context and faster replies with <strong>Pro</strong>.</div>
+          <a class="primary" href="/subscribe">Upgrade</a>
         </div>
       {% endif %}
-    {% endwith %}
 
-    {% if plan == 'free' %}
-      <div class="upgrade-banner">
-        <div>You're on the <strong>Free</strong> plan. Unlock longer context and faster replies with <strong>Pro</strong>.</div>
-        <a class="primary" href="/subscribe">Upgrade</a>
-      </div>
-    {% endif %}
+      <main id="chat" class="chat"></main>
 
-    <main id="chat" class="chat"></main>
-
-    <form id="composer" class="composer">
-      <textarea id="input" rows="1" placeholder="Ask anything… (Shift+Enter = newline)"></textarea>
-      <button id="send" type="submit">Send</button>
-    </form>
+      <form id="composer" class="composer">
+        <textarea id="input" rows="1" placeholder="Ask anything… (Shift+Enter = newline)"></textarea>
+        <button id="send" type="submit">Send</button>
+      </form>
+    </div>
   </div>
 
   <template id="bubble">
@@ -48,6 +90,13 @@
         <div class="text"></div>
         <div class="meta"><span class="time"></span></div>
       </div>
+    </div>
+  </template>
+
+  <template id="chatItem">
+    <div class="chat-item">
+      <span>💬</span>
+      <div class="chat-title"></div>
     </div>
   </template>
 
