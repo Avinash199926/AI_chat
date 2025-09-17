@@ -33,9 +33,7 @@
 </html>
  -->
 
-
-
- <!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -44,24 +42,25 @@
   <link rel="stylesheet" href="/static/style.css" />
   <style>
     .hidden { display: none; }
-    .toggle-link { cursor: pointer; color: #007bff; text-decoration: underline; }
+    .toggle-link { cursor: pointer; color: #0b5fff; text-decoration: underline; }
   </style>
 </head>
 <body>
   <div class="auth-shell">
-    
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash" style="width:100%;max-width:420px;margin:0 auto 12px;">
+          {% for cat, msg in messages %}
+            <div class="flash-{{cat}}">{{msg}}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
     <!-- Login Form -->
-    <form id="login-form" class="card" method="post" action="/login">
+    <form id="login-form" class="card {% if show != 'login' %}hidden{% endif %}" method="post" action="/login">
       <h1 class="h">Welcome back</h1>
-      {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-          <div class="flash">
-            {% for cat, msg in messages %}
-              <div class="flash-{{cat}}">{{msg}}</div>
-            {% endfor %}
-          </div>
-        {% endif %}
-      {% endwith %}
       <label class="field">
         <span>Email</span>
         <input type="email" name="email" placeholder="demo@example.com" required value="demo@example.com" />
@@ -72,16 +71,17 @@
       </label>
       <button class="primary" type="submit">Log in</button>
       <p class="muted">
-        Don’t have an account? <span class="toggle-link" onclick="toggleForms()">Register here</span>
+        Don’t have an account?
+        <span class="toggle-link" onclick="showForm('register')">Register here</span>
       </p>
     </form>
 
     <!-- Register Form -->
-    <form id="register-form" class="card hidden" method="post" action="/register">
+    <form id="register-form" class="card {% if show == 'login' or show is not defined %}hidden{% endif %}" method="post" action="/register">
       <h1 class="h">Create an account</h1>
       <label class="field">
         <span>Full Name</span>
-        <input type="text" name="name" placeholder="John Doe" required />
+        <input type="text" name="name" placeholder="John Doe" />
       </label>
       <label class="field">
         <span>Email</span>
@@ -89,25 +89,40 @@
       </label>
       <label class="field">
         <span>Password</span>
-        <input type="password" name="password" placeholder="•••••••" required />
+        <input type="password" name="password" placeholder="••••••••" required />
       </label>
       <label class="field">
         <span>Confirm Password</span>
-        <input type="password" name="confirm_password" placeholder="•••••••" required />
+        <input type="password" name="confirm_password" placeholder="••••••••" required />
       </label>
       <button class="primary" type="submit">Register</button>
       <p class="muted">
-        Already have an account? <span class="toggle-link" onclick="toggleForms()">Log in</span>
+        Already have an account?
+        <span class="toggle-link" onclick="showForm('login')">Log in</span>
       </p>
     </form>
 
   </div>
 
   <script>
-    function toggleForms() {
-      document.getElementById('login-form').classList.toggle('hidden');
-      document.getElementById('register-form').classList.toggle('hidden');
+    // If you want to switch via URL (e.g., /login?tab=register), Jinja handled initial visibility above.
+    // This JS handles in-page toggling.
+    function showForm(which) {
+      const login = document.getElementById('login-form');
+      const reg = document.getElementById('register-form');
+      if (which === 'register') {
+        login.classList.add('hidden');
+        reg.classList.remove('hidden');
+        history.replaceState(null, '', '?tab=register');
+      } else {
+        reg.classList.add('hidden');
+        login.classList.remove('hidden');
+        history.replaceState(null, '', '?tab=login');
+      }
     }
   </script>
 </body>
 </html>
+
+
+ 
