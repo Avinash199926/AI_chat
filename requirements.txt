@@ -1,0 +1,4 @@
+Flask>=2.0,<3.0      # if you're on Python <3.8, otherwise Flask>=3.0 is fine
+python-dotenv
+requests
+pymongo

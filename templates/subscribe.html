@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Subscribe • AI Chat</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="app narrow">
+    <header class="topbar">
+      <div class="brand">🤖 AI Chat</div>
+      <nav class="userbar">
+        <a class="ghost" href="/">Back</a>
+      </nav>
+    </header>
+
+    <div class="plans">
+      <form method="post" class="plan-grid">
+        <div class="plan {{ 'active' if current_plan=='free' else '' }}">
+          <h2>Free</h2>
+          <ul>
+            <li>Basic chat</li>
+            <li>Short context</li>
+            <li>Community support</li>
+          </ul>
+          <button name="plan" value="free" type="submit" class="secondary">Choose Free</button>
+        </div>
+        <div class="plan {{ 'active' if current_plan=='pro' else '' }}">
+          <h2>Pro</h2>
+          <ul>
+            <li>Fast responses</li>
+            <li>Longer context &amp; history</li>
+            <li>Priority support</li>
+          </ul>
+          <button name="plan" value="pro" type="submit" class="primary">Go Pro</button>
+        </div>
+      </form>
+      <p class="muted center">Current plan: <strong>{{ current_plan|capitalize }}</strong></p>
+    </div>
+  </div>
+</body>
+</html>

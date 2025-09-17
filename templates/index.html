@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Chat</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">🤖 AI Chat</div>
+      <nav class="userbar">
+        <a class="chip" href="/subscribe">{{ plan|capitalize }} plan</a>
+        <span class="muted email">{{ user_email }}</span>
+        <a class="ghost" href="/logout">Logout</a>
+        <button id="themeToggle" class="ghost" title="Toggle theme">🌓</button>
+      </nav>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash full">
+          {% for cat, msg in messages %}<div class="flash-{{cat}}">{{msg}}</div>{% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    {% if plan == 'free' %}
+      <div class="upgrade-banner">
+        <div>You're on the <strong>Free</strong> plan. Unlock longer context and faster replies with <strong>Pro</strong>.</div>
+        <a class="primary" href="/subscribe">Upgrade</a>
+      </div>
+    {% endif %}
+
+    <main id="chat" class="chat"></main>
+
+    <form id="composer" class="composer">
+      <textarea id="input" rows="1" placeholder="Ask anything… (Shift+Enter = newline)"></textarea>
+      <button id="send" type="submit">Send</button>
+    </form>
+  </div>
+
+  <template id="bubble">
+    <div class="msg">
+      <div class="avatar"></div>
+      <div class="bubble">
+        <div class="text"></div>
+        <div class="meta"><span class="time"></span></div>
+      </div>
+    </div>
+  </template>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
