@@ -3,41 +3,6 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Login • AI Chat</title>
-  <link rel="stylesheet" href="/static/style.css" />
-</head>
-<body>
-  <div class="auth-shell">
-    <form class="card" method="post" action="/login">
-      <h1 class="h">Welcome back</h1>
-      {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-          <div class="flash">
-            {% for cat, msg in messages %}<div class="flash-{{cat}}">{{msg}}</div>{% endfor %}
-          </div>
-        {% endif %}
-      {% endwith %}
-      <label class="field">
-        <span>Email</span>
-        <input type="email" name="email" placeholder="demo@example.com" required value="demo@example.com" />
-      </label>
-      <label class="field">
-        <span>Password</span>
-        <input type="password" name="password" placeholder="•••••••" required value="demo123" />
-      </label>
-      <button class="primary" type="submit">Log in</button>
-      <p class="muted">Use demo credentials above to try it.</p>
-    </form>
-  </div>
-</body>
-</html>
-
-
-<!-- <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Auth • AI Chat</title>
   <link rel="stylesheet" href="/static/style.css" />
   <style>
@@ -122,7 +87,4 @@
     }
   </script>
 </body>
-</html> -->
-
-
- 
+</html>
