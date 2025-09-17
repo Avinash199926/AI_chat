@@ -213,11 +213,11 @@ def using_mongo() -> bool:
     return users_coll is not None
 
 # FAKE DB fallback (used if Mongo not configured / reachable)
-FAKE_DB = {
-    "users": {
-        "demo@example.com": {"password": "demo123", "plan": "free"}
-    }
-}
+# FAKE_DB = {
+#     "users": {
+#         "demo@example.com": {"password": "demo123", "plan": "free"}
+#     }
+# }
 
 def get_user(email: str):
     """Return user dict by email, from Mongo if available, else FAKE_DB."""
